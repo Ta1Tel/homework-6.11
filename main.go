@@ -17,24 +17,28 @@ type Product struct {
 	category string
 }
 
-func main() {
-	var wg sync.WaitGroup
-	var allProducts = []Product{{"Банан", "Фрукты"}, {"Помидор", "Овощи"}, {"Яблоко", "Фрукты"}, {"Груша", "Фрукты"}, {"Морковь", "Овощи"}}
+type ProductList []Product
 
-	wg.Add(2)
-
-	work := func(cat string) {
-		defer wg.Done()
-		fmt.Printf("%s : ", cat)
-		for _, i := range allProducts {
-			if i.category == cat {
-				fmt.Printf("%s ", i.name)
-			}
+func (p ProductList) PrintByCategory(cat string, wg *sync.WaitGroup) {
+	defer wg.Done()
+	fmt.Printf("%s :", cat)
+	for _, i := range p {
+		if i.category == cat {
+			fmt.Printf("%s ", i.name)
 		}
 	}
+	fmt.Println()
+}
 
-	go work("Фрукты")
-	go work("Овощи")
+func main() {
+	var wg sync.WaitGroup
+	var allProducts = ProductList{{"Банан", "Фрукты"}, {"Помидор", "Овощи"}, {"Яблоко", "Фрукты"}, {"Груша", "Фрукты"}, {"Морковь", "Овощи"}}
+	wg.Add(2)
+
+	go allProducts.PrintByCategory("Фрукты", &wg)
+	go allProducts.PrintByCategory("Овощи", &wg)
 
 	wg.Wait()
 }
+
+// review
