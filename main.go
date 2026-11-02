@@ -23,25 +23,18 @@ func main() {
 
 	wg.Add(2)
 
-	go func() {
+	work := func(cat string) {
 		defer wg.Done()
-		fmt.Print("Фрукты:")
+		fmt.Printf("%s : ", cat)
 		for _, i := range allProducts {
-			if i.category == "Фрукты" {
+			if i.category == cat {
 				fmt.Printf("%s ", i.name)
 			}
 		}
-	}()
+	}
 
-	go func() {
-		defer wg.Done()
-		fmt.Print("Овощи:")
-		for _, i := range allProducts {
-			if i.category == "Овощи" {
-				fmt.Printf("%s ", i.name)
-			}
-		}
-	}()
+	go work("Фрукты")
+	go work("Овощи")
 
 	wg.Wait()
 }
